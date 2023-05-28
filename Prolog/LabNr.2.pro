@@ -1,44 +1,13 @@
-﻿implement main
-    open core, stdio
+implement main
+    open core, file, stdio
 
 domains
     typeofmovies = action; comedy; drama; thriller; romance; horror; western; crime.
 
-class facts
+class facts - fileAna
     cinema : (integer Num, string Cin, string Addr, string Phone, integer Seat).
     movie : (integer Num_1, string Title, integer Year, string Dir, typeofmovies Gen).
     show : (integer Num_cin, integer Id_movie, string Date, string Time, integer Reve).
-
-% Кинотеатр (id, название, адрес, телефон, количество мест)
-clauses
-    cinema(1, 'Cinema A', '123 Main St', '123-456-7890', 100).
-    cinema(2, 'Cinema B', '456 Elm St', '987-654-3210', 150).
-    cinema(3, 'Cinema C', '789 Oak St', '555-555-5555', 200).
-    cinema(4, 'Cinema D', '789 Maple St', '111-222-3333', 120).
-    cinema(5, 'Cinema E', '321 Pine St', '444-555-6666', 180).
-    cinema(6, 'Cinema F', '567 Oak St', '777-888-9999', 150).
-    cinema(7, 'Cinema G', '234 Elm St', '000-111-2222', 200).
-    cinema(8, 'Cinema H', '901 Birch St', '333-444-5555', 160).
-
-% Кинофильм (id, название, год выпуска, режиссер, жанр)
-    movie(1, 'Movie A', 2010, 'Director A', action).
-    movie(2, 'Movie B', 2015, 'Director B', comedy).
-    movie(3, 'Movie C', 2012, 'Director C', drama).
-    movie(4, 'Movie D', 2021, 'Director D', thriller).
-    movie(5, 'Movie E', 2014, 'Director E', romance).
-    movie(6, 'Movie F', 2011, 'Director F', horror).
-    movie(7, 'Movie G', 2020, 'Director G', western).
-    movie(8, 'Movie H', 2016, 'Director H', crime).
-
-% Показывают (id кинотеатра, id фильма, дата, время, выручка)
-    show(1, 2, '2023-05-10', '19:00', 300).
-    show(2, 1, '2023-05-11', '19:30', 400).
-    show(3, 3, '2023-05-12', '20:00', 500).
-    show(4, 4, '2023-05-13', '20:30', 600).
-    show(5, 5, '2023-05-14', '21:00', 700).
-    show(6, 6, '2023-05-15', '21:30', 800).
-    show(7, 7, '2023-05-16', '22:00', 900).
-    show(8, 8, '2023-05-17', '22:30', 200).
 
 % Правило: Адрес кинотеатра, показывающий фильм определенного жанра
 class predicates
@@ -106,9 +75,17 @@ clauses
         fail.
     increaseShow(_).
 
+class predicates
+    reconsult : (string File).
+clauses
+    reconsult(File) :-
+        retractFactDB(fileAna),
+        consult(File, fileAna).
+
 clauses
     run() :-
-        write(" \n"),
+        console::init(),
+        reconsult("..\\fileAna.txt"),
         address_of_cinema_genre(Addr, Gen),
         write(Addr, " - ", Gen, "\n"),
         fail.
